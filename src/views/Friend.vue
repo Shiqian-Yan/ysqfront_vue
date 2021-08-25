@@ -1,6 +1,6 @@
 <template>
     <div class="friend">
-        <div class="site-content">
+        <div class="site-content-article">
                 <div class="friend-header">
                    个人简介：
                 </div>

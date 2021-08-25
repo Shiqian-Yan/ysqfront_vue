@@ -1,6 +1,6 @@
 <template>
     <div id="banner" :class="{'home-banner':isHome}">
-        <div @click="open" class="banner-img" :style="{'background-image': `url(${src})`}">
+        <div @click="scrollDown" class="banner-img" :style="{'background-image': `url(${src})`}">
             <template v-if="isHome">
                 <!--博主信息-->
                 <div class="focusinfo">
@@ -18,9 +18,9 @@
                     </div>
 
                 </div>
-                <!--左右倾斜-->
-                <div class="slant-left"></div>
-                <div class="slant-right"></div>
+              <div class="scroll-down" @click="scrollDown">
+                <h4>向下滚动<br><i class="el-icon-arrow-down"></i></h4>
+              </div>
             </template>
         </div>
     </div>
@@ -56,6 +56,12 @@ export default {
           this.getSocialData()
         },
         methods:{
+          scrollDown () {
+            window.scrollTo({
+              behavior: 'smooth',
+              top: document.documentElement.clientHeight
+            })
+          },
           getUserData(){
             getUserName().then(response=>{
               this.data=response.data.user
@@ -73,14 +79,12 @@ export default {
         }
     }
 </script>
-
 <style scoped lang="less">
 
     #banner {
         position: relative;
-        margin-top: 80px;
         width: 100%;
-        height: 500px;
+        height: 100vh;
         .banner-img{
           width: inherit;
           height: inherit;
@@ -95,7 +99,7 @@ export default {
           }
       }
         &.home-banner {
-            height: 650px;
+            height: 100vh;
             .banner-img{
                 background-position: center center;
                 background-repeat: no-repeat;
@@ -175,10 +179,23 @@ export default {
             }
         }
     }
-    @media (max-width: 960px){
-        #banner {height: 400px;}
+    .scroll-down {
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      margin-bottom:50px ;
     }
-    @media (max-width: 800px){
-        #banner {display: none;}
+    .scroll-down i {
+      font-size: 2rem;
+      color: white;
     }
+    //@media (max-width: 960px){
+    //    #banner {height: 400px;}
+    //}
+    //@media (max-width: 800px){
+    //    #banner {display: none;}
+    //}
 </style>

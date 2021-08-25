@@ -20,11 +20,11 @@
 
 <style scoped lang="less">
     .feature {
-        width: inherit;
+        width: 300px;
         position: relative;
         img {
-            height: 300px;
-            width: 700px;
+            height: 200px;
+            width: 400px;
             object-fit: cover;
             border-radius: 10px;
 
@@ -35,14 +35,13 @@
         .foverlay {
             position: absolute;
             z-index: 2;
-            width: 700px;
-            height: 300px;
-            //text-align: center;
-            text-indent: 240px;
-            line-height: 300px;
+            width: 400px;
+            height: 200px;
+            text-align: center;
+            line-height: 200px;
             background: #6f6f6f;
             color: white;
-            font-size: 35px;
+            font-size: 20px;
             opacity: 0;
             border-radius: 10px;
 
@@ -51,5 +50,10 @@
             -webkit-transition: opacity .4s ease-out;
             transition: opacity .4s ease-out;
         }
+    }
+    @media (max-width: 1060px) {
+      .foverlay{
+        display: none;
+      }
     }
 </style>

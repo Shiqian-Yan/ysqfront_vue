@@ -11,6 +11,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   letter-spacing: 1px;
+
+
 }
 [v-cloak]{
   display: none;
@@ -37,15 +39,31 @@
     transform: translateY(0);
   }
 }
+.d-flex{
+  display: flex!important;
+}
 .site-content {
+  //float: left;
+  margin: 0 auto;
+  padding: 0 10px;
+  max-width: 80%;
+
+}
+
+.site-content1 {
+  float: right;
+  margin: 0 30px;
+  padding:30px 50px;
+  width: 38%;
+  position: relative;
+}
+.site-content-article {
   margin: 0 auto;
   padding: 0 10px;
   max-width: 800px;
 }
-.site-content1 {
-  margin: 0 auto;
-  padding: 0 10px;
-  max-width: 80%;
+.align-items-center{
+  align-items: center!important;
 }
 .animate{
   animation: main 1.5s;
@@ -54,6 +72,7 @@
   .site-content {
     animation:none;
     padding: 50px 4% 0 4%;
+
   }
 }
 /**文章样式**/
@@ -290,6 +309,7 @@
   img {
     max-width: 100%
   }
+
   /* P
   =============================================================================*/
   p{

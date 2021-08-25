@@ -1,6 +1,6 @@
 <template>
     <div class="about">
-        <div class="site-content">
+        <div class="site-content-article">
             <div class="content-warp">
                 <div class="about-site about-info">
                    关于博客：
@@ -88,6 +88,7 @@
             });
             document.documentElement.scrollTop = 500
           },
+
           submitForm(formName) {
             this.$refs[formName].validate((valid) => {
               if (valid) {

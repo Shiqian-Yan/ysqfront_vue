@@ -27,6 +27,12 @@ export function getAllClass() {
         method: 'get',
     })
 }
+export function getAll() {
+    return request({
+        url: `/frontservice/blogclass/getAll`,
+        method: 'get',
+    })
+}
 export function getClassByName(name,current,limit) {
     return request({
         url: `/frontservice/blogcontent/listByClass/${name}/${current}/${limit}`,
@@ -75,10 +81,17 @@ export function fetchBanner() {
     })
 }
 
-export function fetchComment() {
+export function fetchComment(id) {
     return request({
-        url: '/comment',
-        method: 'get',
-        params: {}
+        url: `/frontservice/blogcomment/comment/${id}`,
+        method: 'get'
+    })
+}
+
+export function addComment(comment,id) {
+    return request({
+        url: `/frontservice/blogcomment/addComment/${id}`,
+        method: 'post',
+        data:comment
     })
 }

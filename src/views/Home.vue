@@ -4,33 +4,29 @@
         <div class="site-content animate">
             <!--通知栏-->
             <div class="notify">
-                <div class="search-result" v-if="hideSlogan" >
-                    <span v-if="searchWords">搜索结果："{{searchWords}}" 相关文章</span>
-                    <span v-else-if="category">分类 {{category}} 相关文章</span>
-                </div>
+                    <quote v-if="searchWords">搜索结果："{{searchWords}}" 相关文章</quote>
+                    <quote v-else-if="category">分类 {{category}} 相关文章</quote>
                 <quote v-else>{{description}}</quote>
             </div>
-
-          <span class="demonstration"></span>
         </div>
-         <div class="site-content1" v-if="!hideSlogan">
-
-          <section-title>
-            <div style="display: flex;align-items: flex-end;"><router-link :to="`/all`" @click.native="open" >点此进入全部文章</router-link><small-ico></small-ico></div>
-          </section-title>
-          <el-carousel :interval="3000" type="card" height="300px">
-            <el-carousel-item v-for="item in classData" :key="item.id" style="border-radius: 15px">
+         <div class="site-content1">
+          <el-carousel :interval="3000" height="200px" direction="vertical">
+            <el-carousel-item class="feature-item" v-for="item in classData" :key="item.id" style="border-radius: 15px">
               <Feature :data="item"></Feature>
             </el-carousel-item>
           </el-carousel>
+           <div class="item">
+             <Tag></Tag>
+           </div>
          </div>
       <div class="site-content animate">
             <!--文章列表-->
-            <main  class="site-main" :class="{'search':hideSlogan}">
+            <main  class="site-main">
                 <template v-for="item in list">
                     <post :post="item" :key="item.id"></post> <!--父子组件？-->
                 </template>
             </main>
+        <div class="page">
           <div v-if="hideSlogan">
               <el-pagination
                   :current-page="page"
@@ -41,6 +37,17 @@
                   @current-change="fetchListName"
               />
           </div>
+          <div v-else>
+            <el-pagination
+                :current-page="page"
+                :page-size="limit"
+                :total="total"
+                style="padding: 30px 0; text-align: center;"
+                layout="total, prev, pager, next, jumper"
+                @current-change="fetchList"
+            />
+          </div>
+        </div>
        </div>
     </div>
 </template>
@@ -49,11 +56,12 @@
     import Banner from '@/components/banner'
     import Feature from '@/components/feature'
     import sectionTitle from '@/components/section-title'
+    import Tag from '@/components/tag'
     import Post from '@/components/post'
     import SmallIco from '@/components/small-ico'
     import Quote from '@/components/quote'
     import HeaderSearch from '@/components/header-search'
-    import {getUserName,getAllClass,getClassByName,getClassBySearch,fetchBanner} from '../api'
+    import {getUserName, getAllClass, getClassByName, getClassBySearch, fetchBanner, fetchList} from '../api'
     export default {
         name: 'Home',
         props: ['cate', 'words'],
@@ -63,6 +71,7 @@
               page:1,//当前页
               limit:5,//每页记录数
               total:0,//总记录数
+              total1:0,
               blogQuery:{},//条件封装对象
               description: '',
               classData: null,
@@ -78,7 +87,8 @@
             Post,
             SmallIco,
             Quote,
-            HeaderSearch
+            HeaderSearch,
+            Tag
         },
 
       computed: {
@@ -115,6 +125,19 @@
           getAllClass(){
             getAllClass().then(response=>{
                 this.classData = response.data.data
+              console.log(this.classData)
+            })
+          },
+          fetchList(page=1) {
+            this.page = page
+            fetchList(this.page,this.limit,this.blogQuery).then(response => {
+              //response接口返回的数据
+              this.list = response.data.rows
+              this.total = response.data.total
+              console.log(this.list)
+              console.log(this.total)
+            }).catch(err => {
+              console.log(err)
             })
           },
           fetchListName(page=1) {
@@ -133,9 +156,9 @@
               }).catch(err => {
                 console.log(err)
               })
-            }else if(this.$route.params&&this.$route.params.words){
-              this.show=true
-              const word=this.$route.params.words
+            }else if(this.$route.params&&this.$route.params.words) {
+              this.show = true
+              const word = this.$route.params.words
               getClassBySearch(word, this.page, this.limit).then(response => {
                 //response接口返回的数据
                 this.list = response.data.rows
@@ -146,6 +169,9 @@
               }).catch(err => {
                 console.log(err)
               })
+            }
+            else{
+              this.fetchList()
             }
           }
 
@@ -160,6 +186,30 @@
     }
 </script>
 <style scoped lang="less">
+.item {
+  z-index: 1;
+  position: relative;
+  width: 83%;
+  margin-top: 50px;
+  margin-bottom: 30px;
+}
+.art-item {
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.art-item .star {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+img.tag {
+  width: 16px;
+  height: 16px;
+}
 
     .site-content {
         .notify {
@@ -197,9 +247,12 @@
             }
         }
     }
+    .page{
 
+      width: 60%;
+    }
     .site-main {
-        padding-top: 80px;
+        padding-top: 30px;
 
         &.search {
             padding-top: 0;
@@ -229,12 +282,16 @@
         .top-feature {
             display: none;
         }
+        .item{
+            display: none;
+        }
 
         .site-main {
             padding-top: 40px;
         }
 
         .site-content {
+
             .notify {
                 margin: 30px 0 0 0;
             }
@@ -245,6 +302,9 @@
             }
 
         }
+      .site-content1 {
+          display: none;
+      }
     }
 
     /******/

@@ -1,6 +1,6 @@
 <template>
     <article class="post post-list">
-        <div class="post-entry home">
+        <div class="post-entry home1">
 <!--            <div class="feature">-->
 <!--                <router-link :to="`/article/${post.id}`">-->
 <!--                    <img src="../assets/1.jpg"/>-->
@@ -34,7 +34,7 @@
                 </div>
             </footer>
         </div>
-        <hr/>
+<!--        <hr/>-->
     </article>
 </template>
 
@@ -52,14 +52,16 @@
 
 <style scoped lang="less">
     .post {
-        margin: 0 0 4% 0;
+        margin: 0 0 2% 0;
+       // float: left;
         position: relative;
+
     }
 
     .post-entry {
-        //.feature {
-            //position: absolute;
-            //margin-top: 10px;
+        .feature {
+            position: absolute;
+           // margin-top: 10px;
 
             //
             //img {
@@ -77,13 +79,13 @@
             //        filter: contrast(130%);
             //    }
             //}
-       // }
-
+        }
         .entry-title {
+            //float: left;
             font-size: 21px;
             font-weight: 600;
             line-height: 50px;
-            //margin: 0 0 0 17%;
+            margin: 0 0 0 2%;
             position: relative;
             z-index: 1;
             white-space: nowrap;
@@ -91,6 +93,7 @@
             text-overflow: ellipsis;
             width: 70%;
             color: #737373;
+            //color: black;
 
             & a:hover {
                 color: #8fd0cc;
@@ -98,7 +101,9 @@
         }
 
         .p-time {
-            position: absolute;
+            //position: absolute;
+            margin-right: 20px;
+            float: right;
             right: 0;
             top: 16px;
             font-size: 12px;
@@ -111,6 +116,7 @@
 
         p.summary {
             min-height: 60px;
+            margin: 0 0 0 2%;
             font-size: 15px;
             color: #6f6f6f;
             letter-spacing: 1px;
@@ -118,7 +124,8 @@
         }
 
         footer.entry-footer {
-            margin: 0 0 0 17%;
+            //margin: 0 0 0 17%;
+            margin-right: 20px;
             list-style: none;
 
             .post-more {
@@ -168,15 +175,27 @@
     }
 
     .post-entry:hover footer.entry-footer .info-meta {
-        -webkit-transform: translate3d(-230px, 0, 0);
-        transform: translate3d(-230px, 0, 0);
+        -webkit-transform: translate3d(-100px, 0, 0);
+        transform: translate3d(-100px, 0, 0);
         opacity: 1;
         visibility: visible;
     }
 
     .post hr {
-        width: 100%;
+        width: 60%;
         border: 1px dashed #ddd;
+    }
+
+    .home1:hover {
+      transition: all 0.2s linear;
+      background: #f1f1f1;
+    }
+    .home1{
+      width: 60%;
+      height: 60%;
+      background: white;
+      border-radius: 15px;
+      //background-size: 10% 10%;
     }
 
     /*******/
@@ -186,22 +205,27 @@
         }
     }
     @media (max-width: 800px) {
-        .post-entry {
-            .feature img {
-                width: 50px;
-                height: 50px;
-            }
+          .home1{
+            background: unset;
+            width: 100%;
+          }
+          .post-entry {
+            //.feature img {
+            //    width: 50px;
+            //    height: 50px;
+            //}
+
             .entry-title{
                 font-size: 16px;
                 line-height: 30px;
-                margin: 0 0 0 65px;
+                margin: 0 0 0 5px;
             }
             .p-time {
                 position: relative;
                 margin: -15px 0 0 65px;
             }
             p.summary {
-                margin: 20px 0 0 65px;
+                margin: 20px 0 0 5px;
                 font-size: 14px;
                 height: 30px;
                 overflow: hidden;
@@ -209,21 +233,15 @@
             .post-more{
                 display: none;
             }
+            .home1{
+              display: none;
+            }
         }
         .post-list hr {
             margin-top: 20px;
         }
     }
 
-      .home:hover {
-        transition: all 0.2s linear;
-        background: #f1f1f1;
-      }
-      .home{
-        //width: 100%;
-        //height: 100%;
-        //background-size: 100% 100%;
-       }
 
     /******/
 </style>

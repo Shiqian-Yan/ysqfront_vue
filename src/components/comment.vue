@@ -1,17 +1,16 @@
 <template>
     <div class="comment" :id="`comment${comment.id}`">
         <div class="comment-head">
-            <div class="user-avatar"><img :src="comment.fromUserAvatar" alt=""></div>
+<!--            <div class="user-avatar"><img :src="comment.fromUserAvatar" alt=""></div>-->
             <div class="head-right">
                 <section-title>
                     <div style="display: flex;align-items: center;justify-content: space-between;">
                         <div>
-                            <span class="from-user user-name">{{comment.fromUserName}}</span>
-                            <span class="to-user" v-if="comment.toUserId"><span style="margin: 0 5px;">@</span><span class="user-name">{{comment.toUserName}}</span></span>
+                            <span class="from-user user-name">用户名：{{comment.name}}</span>
                         </div>
                         <div style="font-size: 13px;">
-                            <span style="color: #9c9c9c;margin-right: 20px;">{{comment.createTime | parseTime}}</span>
-                            <span @click.stop="showCommentEditor=true" style="cursor: pointer;">回复</span>
+                            <span style="color: #9c9c9c;margin-right: 20px;">{{comment.gmtCreate | parseTime}}</span>
+<!--                            <span @click.stop="showCommentEditor=true" style="cursor: pointer;">回复</span>-->
                         </div>
                     </div>
                 </section-title>
@@ -19,11 +18,11 @@
         </div>
         <div class="comment-body">
             <div class="content-text">
-                <p>{{comment.content}}</p>
+                <p>{{comment.comment}}</p>
             </div>
-            <div v-if="showCommentEditor" @click.stop="">
-                <comment-message-editor :inline="true" buttonText="回复" @submit="submitReply"></comment-message-editor>
-            </div>
+<!--            <div v-if="showCommentEditor" @click.stop="">-->
+<!--                <comment-message-editor :inline="true" buttonText="回复" @submit="submitReply" ></comment-message-editor>-->
+<!--            </div>-->
             <slot></slot>
         </div>
     </div>
@@ -73,7 +72,7 @@
 
 <style scoped lang="less">
     .comment{
-        margin: 20px 0;
+        margin: 20px 0 -30px;
     }
     .comment-head{
         display: flex;
@@ -87,10 +86,12 @@
     .comment-body{
         padding-left: 80px;
         .content-text{
-            /*padding-bottom: 30px;*/
+            padding-top: 25px;
+            padding-bottom: 50px;
             margin-bottom: 30px;
+            margin-left: -50px;
             font-size: 14px;
-            color: #9c9c9c;
+            color: dimgrey;
             line-height: 1.3rem;
         }
     }
@@ -108,6 +109,7 @@
         .comment-body{
             padding-left: 15px;
             .content-text{
+              margin-left: 20px;
                 margin-top: 10px;
             }
         }

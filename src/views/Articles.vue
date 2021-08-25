@@ -1,7 +1,7 @@
 <template>
     <div class="articles">
         <banner :src="banner.imageUrl"></banner>
-        <div class="site-content animate">
+        <div class="site-content-article animate">
             <!-- 文章目录 -->
             <div id="article-menus">
                 <menu-tree :menus="menus" child-label="child"></menu-tree>
@@ -50,18 +50,32 @@
                         </footer>
                     </section-title>
 
-                    <!--声明-->
-                    <div class="open-message">
+<!--                    声明-->
+                  <div class="open-message">
+                    <p>声明：YSQblog博客|版权所有，违者必究|如未注明，均为原创|本网站采用<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">BY-NC-SA</a>协议进行授权</p>
+                    <p>转载：转载请注明原文链接</p>
+                  </div>
+                    <div class="ycom">评论:</div>
+                  <el-form :rules="rules" :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
+                    <el-form-item label="昵称" prop="name">
+                      <el-input v-model="formInline.name" placeholder="昵称必填"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                      <el-input v-model="formInline.email" placeholder="可不填，邮箱方便我回复"></el-input>
+                    </el-form-item>
+                    <br>
+                    <el-form-item label="评论" prop="comment">
+                      <el-input type="textarea" v-model="formInline.comment" class="comment-size"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                      <el-button type="info" @click="submitForm('formInline')">提交</el-button>
+                    </el-form-item>
+                  </el-form>
+                  <div class="comments">
+                    <comment v-for="item in comments" :key="item.id" :comment="item">
+                    </comment>
+                  </div>
 
-                    </div>
-                    <!--评论-->
-                    <div class="comments">
-                        <comment v-for="item in comments" :key="item.comment.id" :comment="item.comment">
-                            <template v-if="item.reply.length">
-                                <comment v-for="reply in item.reply" :key="reply.id" :comment="reply"></comment>
-                            </template>
-                        </comment>
-                    </div>
                 </article>
             </main>
         </div>
@@ -74,17 +88,42 @@
     import comment from '@/components/comment'
     import menuTree from '@/components/menu-tree'
     import {fetchBanner, fetchComment} from '../api'
-    import {fetchById} from "../api";
+    import {fetchById,addComment} from "../api";
 
     export default {
         name: 'articles',
         data(){
+          let checkEmail = (rule, value,callback) =>{//验证邮箱
+            const regEmail = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+            if(this.formInline.email != '' && !regEmail.test(this.formInline.email)) {
+              callback(new Error('请输入有效的邮箱'));
+            }else{
+              callback();//必须加
+            }
+          }
           return{
               data: {},
               showDonate: false,
               comments: [],
               menus: [],
-              banner:{}
+              banner:{},
+             formInline: {
+              name: '',
+              email: '',
+               comment:''
+            },
+            rules: {
+              email: [{required: false, message: '请输入邮箱', trigger: 'blur'},
+                {validator: checkEmail, trigger: "blur"}],
+              name: [
+                { required: true, message: '请输入昵称', trigger: 'blur' },
+                { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+              ],
+              comment: [
+                { required: true, message: '请输入评论', trigger: 'blur' },
+                { message: '请输入评论', trigger: 'blur' }
+              ],
+            }
           }
         },
         components: {
@@ -100,7 +139,41 @@
               const id = this.$route.params.id
               //调用根据id查询的方法
               this.getById(id)
+              this.getComment(id)
             }
+          },
+          onSubmit(){
+            if(this.$route.params && this.$route.params.id) {
+              //从路径获取id值
+              const id = this.$route.params.id
+              addComment(this.formInline,id).then(res=>{
+                this.open('发送成功')
+                this.formInline={}
+                this.init()
+              })
+            }
+          },
+          open(mess) {
+            const h = this.$createElement;
+            this.$notify({
+              title: '提示',
+              message: h('i', { style: 'color: teal'}, mess),
+              duration:800,
+              position:"top-left",
+              offset:100
+            });
+            document.documentElement.scrollTop = 500
+          },
+          submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+              if (valid) {
+                this.onSubmit()
+              } else {
+                console.log('error submit!!');
+                this.open('发送失败')
+                return false;
+              }
+            });
           },
           getBanner(){
             fetchBanner().then(response=>{
@@ -112,9 +185,10 @@
               this.data = response.data.blogcontent
             })
           },
-          getComment(){
-              fetchComment().then(res => {
-                  this.comments = res.data || []
+          getComment(id){
+              fetchComment(id).then(res => {
+                this.comments = res.data.data || []
+                console.log(this.comments)
               }).catch(err => {
                   console.log(err)
               })
@@ -154,12 +228,17 @@
         },
         created() {
             this.init()
-            this.getComment()
             this.getBanner()
         }
     }
 </script>
 <style scoped lang="less">
+    .comment-size{
+       width: 500px;
+    }
+    .ycom{
+      padding-top: 30px;
+    }
     .site-content {
         position: relative;
         .site-main {
@@ -202,7 +281,7 @@
 
             .breadcrumbs {
                 font-size: 14px;
-                color: #D2D2D2;
+                color: grey;
                 text-decoration: none;
                 margin-bottom: 30px;
             }
@@ -309,7 +388,7 @@
             }
         }
         .open-message {
-            margin: 50px 0;
+            //margin: 50px 0;
             position: relative;
             background: #2B2B2B;
             padding: 10px 30px;

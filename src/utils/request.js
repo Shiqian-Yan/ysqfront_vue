@@ -3,8 +3,8 @@ import store from '@/store'
 //axios.defaults.baseURL="http://localhost:8087"
 // create an axios instance
 const service = axios.create({
-    //baseURL: process.env.VUE_APP_BASE_API,
-    baseURL: "http://localhost:8223",
+    //baseURL: "http://localhost:8223",
+    baseURL: "http://39.107.116.140:8223",
     timeout: 5000 // request timeout
 })
 
